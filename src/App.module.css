@@ -1,0 +1,14 @@
+.mainContent
+{
+  width: 100vw;
+  height: 100vh;
+  border: seagreen 1px solid;
+  /*color: ;*/
+  /*background-color: #282c34;*/
+}
+.mapContent
+{
+  width: 100%;
+  height: 100%;
+  border:  darkturquoise dashed 1px;
+}

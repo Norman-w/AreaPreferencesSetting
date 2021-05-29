@@ -1,0 +1,90 @@
+fade-enter {
+    opacity: 0;
+    animation-duration: .5s;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.55, 0.2);
+    animation-play-state: paused;
+}
+
+.fade-appear {
+    opacity: 0;
+    animation-duration: .5s;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.55, 0.2);
+    animation-play-state: paused;
+}
+
+.fade-leave {
+    animation-duration: .5s;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.55, 0.2);
+    animation-play-state: paused;
+}
+
+.fade-enter.fade-enter-active {
+    animation-name: fadeIn;
+    animation-play-state: running;
+}
+
+.fade-appear.fade-appear-active {
+    animation-name: fadeIn;
+    animation-play-state: running;
+}
+
+.fade-leave.fade-leave-active {
+    animation-name: fadeOut;
+    animation-play-state: running;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.swiper-animate {
+    /*position: absolute;*/
+    height: 20px;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    background: linear-gradient(to bottom, #d3d7d3, #d0d6e2);
+    animation: scan 3s ease-in-out infinite;
+    /*-webkit-animation: scan 1.5s ease-in-out infinite;*/
+    /*border: 1px seagreen solid;*/
+    box-shadow: 0 0 1px 1px seashell;
+    border-radius: 5px;
+    overflow: hidden;
+    color: lightgoldenrodyellow;
+}
+
+@keyframes scan {
+    0% {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    20% {
+        transform: translateY(30px);
+        opacity: 1;
+    }
+    90% {
+        transform: translateY(200px);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(200px);
+        opacity: 0;
+    }
+}

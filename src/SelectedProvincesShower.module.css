@@ -1,0 +1,8 @@
+.main
+{
+    width: 280px;
+    height: 220px;
+    border-radius: 15px;
+    box-shadow: 0 0 5px 5px lightgray;
+    margin: 8px;
+}

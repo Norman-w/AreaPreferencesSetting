@@ -1,0 +1,12 @@
+.areaPreferencesManage
+{
+    width: 92%;
+    /*height: 96%;*/
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /*border: 1px solid darkseagreen;*/
+    margin: 1%;
+    padding: 1%;
+}
