@@ -35,3 +35,10 @@
     user-select: none;
     cursor: pointer;
 }
+
+.titleStyle
+{
+    margin-bottom: 8px;
+    font-size: 8px;
+    color: lightgray;
+}

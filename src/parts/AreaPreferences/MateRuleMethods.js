@@ -2,9 +2,23 @@ import React, { Component } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import styles from './MateRuleMethods.module.css';
 import '../../global.css'
+import Swal from 'sweetalert2';
 
+//region 全局数据
+//region 可以使用的规则list
 const mateRuleMethods = ['NONE','买家留言','卖家备注','使用优先模板匹配','地址过滤关键字',];
-//初始化数据
+//endregion
+
+//region 样式,一个单位的占位宽度基础是多少.根据这个数值可以设置页面的外边框等边距样式
+const grid = 3;
+//endregion
+//endregion
+
+
+
+//region 全局方法
+
+//region 初始化数据
 const getItems = count =>
     Array.from({ length: count }, (v, k) => k).map(k => ({
         id: `item-${k + 1}`,
@@ -46,8 +60,9 @@ const getItems3=(MateRuleMethodsArr)=>
     }
     return ret;
 }
+//endregion
 
-// 重新记录数组顺序
+//region 方法:重新记录数组顺序
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
     //删除并记录 删除元素
@@ -56,10 +71,12 @@ const reorder = (list, startIndex, endIndex) => {
     result.splice(endIndex, 0, removed);
     return result;
 };
+//endregion
 
-const grid = 3;
 
-// 设置样式
+
+
+//region  设置样式:获取给定参数的list内的元素的样式
 const getItemStyle = (isDragging,isSelected, draggableStyle) => {
     let normal = {
         // some basic styles to make the items look a bit nicer
@@ -100,21 +117,30 @@ const getItemStyle = (isDragging,isSelected, draggableStyle) => {
     }
         return ret;
 };
+//endregion
 
+//region 获取list外框的样式
 const getListStyle = () => ({
     // background: '#eff5ef',
     padding: grid,
     width: 200
 });
+//endregion
+
+//endregion
 
 
 
+
+//region 控件定义的主体
 export default class MateRuleMethods extends Component {
+    //组件的数据
     state= {
         items:[],
         selectedItemIndex:-1,
         showAddBtn:false,
     }
+    //构造函数
     constructor(props) {
         super(props);
         this.state = {
@@ -125,6 +151,10 @@ export default class MateRuleMethods extends Component {
         this.onDragEnd = this.onDragEnd.bind(this);
     }
 
+    //region 响应事件集
+
+
+    //当用户拖拽结束
     onDragEnd(result) {
         // dropped outside the list
         if (!result.destination) {
@@ -169,6 +199,8 @@ export default class MateRuleMethods extends Component {
         );
     }
 
+
+    //当用户选择元素
     onSelected(item,index)
     {
         // console.log(item);
@@ -180,7 +212,10 @@ export default class MateRuleMethods extends Component {
         this.setState({selectedItemIndex:newValue})
     }
 
+    //endregion
 
+
+    //region 渲染
     render() {
         return (
             <DragDropContext onDragEnd={this.onDragEnd}>
@@ -203,10 +238,10 @@ export default class MateRuleMethods extends Component {
                                 // 为了使 droppable 能够正常工作必须 绑定到最高可能的DOM节点中provided.innerRef.
                                 ref={provided.innerRef}
                                 style={getListStyle(snapshot)}
-                                onMouseEnter={()=>{this.setState({showAddBtn:this.state.items.length<4?true:false})}}
+                                onMouseEnter={()=>{this.setState({showAddBtn:this.state.items.length < 4})}}
                                 onMouseLeave={()=>{this.setState({showAddBtn:false})}}
                             >
-                                <div style={{marginBottom:'8px', fontSize:8,color:'lightgray'}}>规则使用顺序,拖拽排序,点击编辑</div>
+                                <div className={styles.titleStyle}>规则使用顺序,拖拽排序,点击编辑</div>
                                 {this.state.items.map((item, index) => (
                                     <Draggable key={item.id} draggableId={item.id} index={index}>
                                         {(provided, snapshot) => (
@@ -238,4 +273,6 @@ export default class MateRuleMethods extends Component {
             </DragDropContext>
         );
     }
+    //endregion
 }
+//endregion

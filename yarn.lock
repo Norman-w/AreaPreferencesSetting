@@ -11017,6 +11017,11 @@ svgo@^1.0.0, svgo@^1.2.2:
     unquote "~1.1.1"
     util.promisify "~1.0.0"
 
+sweetalert2@^11.0.15:
+  version "11.0.15"
+  resolved "https://registry.nlark.com/sweetalert2/download/sweetalert2-11.0.15.tgz#61998be3e74adfd4a89c3027897c1b9e170fb3b9"
+  integrity sha1-YZmL4+dK39SonDAniXwbnhcPs7k=
+
 sweetalert@^2.1.2:
   version "2.1.2"
   resolved "https://registry.nlark.com/sweetalert/download/sweetalert-2.1.2.tgz#010baaa80d0dbdc86f96bfcaa96b490728594b79"
