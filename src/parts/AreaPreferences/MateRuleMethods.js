@@ -80,7 +80,10 @@ const getItemStyle = (isDragging,isSelected, draggableStyle) => {
         userSelect: "none",
         padding: grid * 2,
         margin: `0 0 ${grid}px 0`,
-
+      display:'flex',
+      flexDirection:'row',
+      justifyContent:'space-between',
+      alignItems:'center',
 
 
         // styles we need to apply on draggables
@@ -209,6 +212,13 @@ export default class MateRuleMethods extends Component {
         this.setState({selectedItemIndex:newValue})
     }
 
+    //当删除元素
+  onClickRemoveBtn(index)
+  {
+    let data = this.state.items;
+    data.splice(index,1);
+    this.setState({items:data});
+  }
     //endregion
 
 
@@ -321,6 +331,7 @@ export default class MateRuleMethods extends Component {
                                                 onClick={(e)=>{this.onSelected(item,index)}}
                                             >
                                                 {item.content}
+                                              {<div className={styles.deleteBtn} onClick={()=>{this.onClickRemoveBtn(index)}}>-</div>}
                                             </div>
                                         )}
                                     </Draggable>
