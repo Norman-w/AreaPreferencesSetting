@@ -3,6 +3,8 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import styles from './MateRuleMethods.module.css';
 import '../../global.css'
 import Swal2 from 'sweetalert2';
+import {notification} from 'antd';
+// import '@sweetalert2/themes/bulma/bulma.css';
 
 //region 全局数据
 //region 可以使用的规则list
@@ -165,6 +167,11 @@ export default class MateRuleMethods extends Component {
             items :getItems3(this.props.methods)
         };
         this.onDragEnd = this.onDragEnd.bind(this);
+      // swal.setDefaults({
+      //   confirmButtonText: '下一个 &rarr;',
+      //   showCancelButton: true,
+      //   animation: false
+      // });
     }
 
     //region 响应事件集
@@ -242,6 +249,13 @@ export default class MateRuleMethods extends Component {
   {
     let data = this.state.items;
     data.splice(index,1);
+    if (data.length<1)
+    {
+      notification.warn({
+        message:'提示:',
+        description:'您至少需要添加一个该偏好设置的物流匹配方式,否则将按照无特殊规则的区域进行物流匹配',
+      })
+    }
     this.setState({items:data,showAddBtn:true});
   }
     //endregion
@@ -302,6 +316,11 @@ export default class MateRuleMethods extends Component {
         const { value: selectedIndex } = await Swal2.fire({
             title: '请选择要添加的物流匹配规则',
             input: 'select',
+          confirmButtonColor:'#7cd1f9',
+          confirmButtonText:
+            ' 添加',
+          cancelButtonText:
+          '取消',
             inputOptions: canSelectItems,
             inputPlaceholder: '',
             showCancelButton: true,

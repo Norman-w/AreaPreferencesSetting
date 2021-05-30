@@ -23,3 +23,12 @@
 
 ###待办任务
 ####会在钉钉中展示和管理.
+
+
+###发现问题:
+`swal.setDefaults({
+         confirmButtonText: '下一个 &rarr;',
+         showCancelButton: true,
+         animation: false
+       });`
+并不可用,更改按钮的可怜的紫色只能用`confirmButtonColor`来设置
