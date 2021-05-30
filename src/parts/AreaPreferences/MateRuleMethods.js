@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import styles from './MateRuleMethods.module.css';
 import '../../global.css'
-import Swal from 'sweetalert2';
+import Swal2 from 'sweetalert2';
 
 //region 全局数据
 //region 可以使用的规则list
@@ -72,9 +72,6 @@ const reorder = (list, startIndex, endIndex) => {
     return result;
 };
 //endregion
-
-
-
 
 //region  设置样式:获取给定参数的list内的元素的样式
 const getItemStyle = (isDragging,isSelected, draggableStyle) => {
@@ -215,6 +212,73 @@ export default class MateRuleMethods extends Component {
     //endregion
 
 
+    //region 当用户点了添加按钮
+    async onClickAddBtn()
+    {
+        //region 已经在使用的就不让选了.
+        let canSelectItems = [];
+        for (let i=1;i<mateRuleMethods.length;i++)
+        {
+            let havenItem = this.state.items.find((item)=>
+            {
+                return item.content === mateRuleMethods[i];
+            })
+            if(havenItem)
+            {
+                continue;
+            }
+            // let currentRadioItem = {};
+            // //为空结构currentRadioItem 设置key和name相等(直接会添加键值对)
+            // currentRadioItem[mateRuleMethods[i]] = mateRuleMethods[i];
+            // canSelectItems.push(currentRadioItem);
+            canSelectItems.push(mateRuleMethods[i]);
+        }
+
+        // console.log('已经有的:', this.state.items);
+        //endregion
+
+        //region 如果没有可以选的,退出,通常不会这样的,因为列表中如果已经包含了所有已经选择的,添加按钮就不显示了.
+        if (!canSelectItems || canSelectItems.length ===0)
+        {
+            return;
+        }
+        //endregion
+        //region 如果只有一项的话,直接添加这一项进来就可以了.
+
+        if (canSelectItems.length === 1)
+        {
+            let data = this.state.items;
+            data.push(
+                {
+                    id:'item-'+data.length,
+                    content:canSelectItems[0],
+                }
+            )
+            this.setState({items:data,showAddBtn:false});
+            return;
+        }
+
+        //endregion
+
+
+        const { value: color } = await Swal2.fire({
+            title: 'Select color',
+            input: 'radio',
+            inputOptions: canSelectItems,
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'You need to choose something!'
+                }
+            }
+        })
+
+        if (color) {
+            Swal2.fire({ html: `You selected: ${color}` })
+        }
+    }
+    //endregion
+
+
     //region 渲染
     render() {
         return (
@@ -263,7 +327,7 @@ export default class MateRuleMethods extends Component {
                                 ))}
                                 {/* 占位符号 */}
                                 {provided.placeholder}
-                                {this.state.showAddBtn && <div className={styles.addBtn}>＋</div>}
+                                {this.state.showAddBtn && <div className={styles.addBtn} onClick={this.onClickAddBtn.bind(this)}>＋</div>}
                             </div>
                         )}
                     </Droppable>
