@@ -18,10 +18,21 @@ const grid = 3;
 
 //region 全局方法
 
+//region 获取guid
+const getGuid = ()=>{
+    function S4() {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    }
+    return (S4()+S4()+S4()+S4()+S4()+S4()+S4()+S4());
+}
+//endregion
+
+
 //region 初始化数据
 const getItems = count =>
     Array.from({ length: count }, (v, k) => k).map(k => ({
-        id: `item-${k + 1}`,
+        // id: `item-${k + 1}`,
+        id:getGuid(),
         content: `this is content ${k + 1}`
     }));
 const getItems2 = ()=>
@@ -31,7 +42,8 @@ const getItems2 = ()=>
     {
         ret.push(
             {
-                id:'item-'+i,
+                // id:'item-'+i,
+                id:getGuid(),
                 content:mateRuleMethods[i],
             }
         )
@@ -53,7 +65,8 @@ const getItems3=(MateRuleMethodsArr)=>
         let current = MateRuleMethodsArr[i];
         ret.push(
             {
-                id:'rule-'+i,
+                // id:'rule-'+i,
+                id:getGuid(),
                 content:mateRuleMethods[current],
             }
         )
@@ -74,7 +87,10 @@ const reorder = (list, startIndex, endIndex) => {
 //endregion
 
 //region  设置样式:获取给定参数的list内的元素的样式
-const getItemStyle = (isDragging,isSelected, draggableStyle) => {
+const getItemStyle = (that,item, isDragging, draggableStyle) => {
+    // console.log('获取样式:选择了吗?',item, '当前的选中的id是:', that.state)
+    // console.log('是否一样?',item.id === that.state.selectedItemId)
+    let isSelected = item.id === that.state.selectedItemId;
     let normal = {
         // some basic styles to make the items look a bit nicer
         userSelect: "none",
@@ -137,7 +153,7 @@ export default class MateRuleMethods extends Component {
     //组件的数据
     state= {
         items:[],
-        selectedItemIndex:-1,
+        selectedItemId:null,
         showAddBtn:false,
     }
     //构造函数
@@ -164,9 +180,9 @@ export default class MateRuleMethods extends Component {
 
         //region 找出之前被选中的那个的id
         let oldSelectedItem = null;
-        if (this.state.selectedItemIndex>=0)
+        if (this.state.selectedItemId)
         {
-            oldSelectedItem = this.state.items[this.state.selectedItemIndex];
+            oldSelectedItem = this.state.items.find((item)=>{return item.id === this.state.selectedItemId})
         }
         //endregion
         const items = reorder(
@@ -180,36 +196,45 @@ export default class MateRuleMethods extends Component {
         }
         ,
             //region 设置完了新的排序数据以后,找到原来被选中的那个元素(如果有),然后让他的新位置设置为"当前被选择元素的位置"
-            ()=>
-            {
-                if (oldSelectedItem)
-                {
-                    let oldSelectedItemId = oldSelectedItem.id;
-                    for (let i=0;i<this.state.items.length;i++)
-                    {
-                        if (this.state.items[i].id === oldSelectedItemId)
-                        {
-                            this.setState({selectedItemIndex:i})
-                            break;
-                        }
-                    }
-                }
-            }
+            // ()=>
+            // {
+            //     if (oldSelectedItem)
+            //     {
+            //         let oldSelectedItemId = oldSelectedItem.id;
+            //         for (let i=0;i<this.state.items.length;i++)
+            //         {
+            //             if (this.state.items[i].id === oldSelectedItemId)
+            //             {
+            //                 this.setState({selectedItemIndex:i})
+            //                 break;
+            //             }
+            //         }
+            //     }
+            // }
             //endregion
         );
     }
 
 
     //当用户选择元素
-    onSelected(item,index)
+    onSelected(item)
     {
+        // console.log('点了选择', item.id)
+        if (!item)
+            return;
         // console.log(item);
-        let newValue = index;
-        if (this.state.selectedItemIndex === index)
+        // let newValue = index;
+        // if (this.state.selectedItemId === item.id)
+        // {
+        //     newValue = -1;
+        // }
+        if (this.state.selectedItemId === item.id)
         {
-            newValue = -1;
+            this.setState({selectedItemId:null})
         }
-        this.setState({selectedItemIndex:newValue})
+        else {
+            this.setState({selectedItemId: item.id})
+        }
     }
 
     //当删除元素
@@ -217,7 +242,7 @@ export default class MateRuleMethods extends Component {
   {
     let data = this.state.items;
     data.splice(index,1);
-    this.setState({items:data});
+    this.setState({items:data,showAddBtn:true});
   }
     //endregion
 
@@ -260,7 +285,8 @@ export default class MateRuleMethods extends Component {
             let data = this.state.items;
             data.push(
                 {
-                    id:'item-'+data.length,
+                    // id:'item-'+data.length,
+                    id:getGuid(),
                     content:canSelectItems[0],
                 }
             )
@@ -271,20 +297,45 @@ export default class MateRuleMethods extends Component {
         //endregion
 
 
-        const { value: color } = await Swal2.fire({
-            title: 'Select color',
-            input: 'radio',
+
+        //region 使用sweetalert2进行展示选择
+        const { value: selectedIndex } = await Swal2.fire({
+            title: '请选择要添加的物流匹配规则',
+            input: 'select',
             inputOptions: canSelectItems,
+            inputPlaceholder: '',
+            showCancelButton: true,
             inputValidator: (value) => {
-                if (!value) {
-                    return 'You need to choose something!'
-                }
+                return new Promise((resolve) => {
+                    // if (value === 'oranges') {
+                        resolve()
+                    // } else {
+                    //     resolve('You need to select oranges :)')
+                    // }
+                })
             }
         })
-
-        if (color) {
-            Swal2.fire({ html: `You selected: ${color}` })
+        if (selectedIndex>=0)
+        {
+            //选择有效的值,进行添加
+            let selectedItem = canSelectItems[selectedIndex];
+            if (selectedItem)
+            {
+                let newData = this.state.items;
+                newData.push(
+                    {
+                        // id:'item-'+newData.length,
+                        id:getGuid(),
+                        content:canSelectItems[selectedIndex],
+                    }
+                )
+            }
         }
+        // if (selectedIndex>=0) {
+        //     // Swal2.fire(`You selected: ${fruit}`)
+        //     Swal2.fire(`You selected: ${canSelectItems[selectedIndex]}`)
+        // }
+        //endregion
     }
     //endregion
 
@@ -323,15 +374,15 @@ export default class MateRuleMethods extends Component {
                                                 ref={provided.innerRef}
                                                 {...provided.draggableProps}
                                                 {...provided.dragHandleProps}
-                                                style={getItemStyle(
+                                                style={getItemStyle(this,
+                                                    item,
                                                     snapshot.isDragging,
-                                                    this.state.selectedItemIndex === index,
                                                     provided.draggableProps.style
                                                 )}
-                                                onClick={(e)=>{this.onSelected(item,index)}}
+                                                onClick={(e)=>{this.onSelected(item)}}
                                             >
                                                 {item.content}
-                                              {<div className={styles.deleteBtn} onClick={()=>{this.onClickRemoveBtn(index)}}>-</div>}
+                                              {<div hidden={!(this.state.selectedItemId === item.id)} className={styles.deleteBtn} onClick={()=>{this.onClickRemoveBtn(index)}}>-</div>}
                                             </div>
                                         )}
                                     </Draggable>

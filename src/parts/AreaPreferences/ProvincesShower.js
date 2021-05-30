@@ -1,8 +1,6 @@
 import React from 'react';
 import styles from './ProvincesShower.module.css';
 import chinaGeoJson from "./100000_full";
-import swal from '@sweetalert/with-react'
-import {Button} from "antd";
 
 
 const echarts = require('echarts');
@@ -137,31 +135,7 @@ class ProvincesShower extends React.Component
     }
     onClickEditAreasBtn()
     {
-        const onPick = value => {
-            swal("Thanks for your rating!", `You rated us ${value}/3`, "success")
-        }
-
-        const MoodButton = ({ rating, onClick }) => (
-            <button
-                data-rating={rating}
-                style={{
-                    width:30,
-                    height:20,
-                    border:'1px solid red'
-                }}
-                onClick={() => onClick(rating)}
-            />
-        )
-
-        swal({
-            text: "How was your experience getting help with this issue?",
-            buttons: {
-                cancel: "Close",
-            },
-            content: (
-                <ProvincesShower></ProvincesShower>
-            )
-        })
+        console.log('点击了编辑偏好区域按钮');
     }
     buildSelectedProvincesJson(data)
     {
