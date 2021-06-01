@@ -9,7 +9,6 @@ import usefulData from "./usefulData";
 
 //region 全局数据
 
-
 //region 样式,一个单位的占位宽度基础是多少.根据这个数值可以设置页面的外边框等边距样式
 const grid = 3;
 //endregion
@@ -28,38 +27,62 @@ const getGuid = () => {
 }
 //endregion
 
-
-//region 初始化数据
-const getItems3 = (tempsIndexList) => {
-  let ret = [];
-  if (!tempsIndexList)
-    return ret;
-  for (var p in tempsIndexList)
+//region 视图数据到枚举list数据的转换.枚举list用于数据存储
+const convert2EnumIndexList = (showingItems)=>
+{
+  if (!showingItems)
   {
-    let name = tempsIndexList[p];//这一行实际要改一下把index转换成中文的
-    let item =
-      {
-        id:getGuid(),
-        templateName:name,
-        templateIndex:tempsIndexList[p],
-      }
-      ret.push(item);
+    return null;
+  }
+  let ret = [];
+  for (var p in showingItems)
+  {
+    let content = showingItems[p].content;
+    let index = usefulData.mateRuleMethods.indexOf(content);
+    ret.push(index);
   }
   return ret;
 }
 //endregion
 
-//region 数据转化,把显示用的json转换成传出去提供保存使用的模板的index的list
-const convert2TempsIndexList = (showingInfo)=>
-{
-  if (!showingInfo)
-  {
-    return null;
-  }
+//region 初始化数据
+const getItems = count =>
+  Array.from({length: count}, (v, k) => k).map(k => ({
+    // id: `item-${k + 1}`,
+    id: getGuid(),
+    content: `this is content ${k + 1}`
+  }));
+const getItems2 = () => {
   let ret = [];
-  for (var p in showingInfo)
-  {
-    ret.push(showingInfo[p].templateIndex);
+  for (let i = 1; i < usefulData.mateRuleMethods.length; i++) {
+    ret.push(
+      {
+        // id:'item-'+i,
+        id: getGuid(),
+        content: usefulData.mateRuleMethods[i],
+      }
+    )
+  }
+  return ret;
+}
+const getItems3 = (MateRuleMethodsArr) => {
+//     "MateRuleMethod": [
+//     2,
+//     1,
+//     3
+// ],
+  if (!MateRuleMethodsArr)
+    return null;
+  let ret = [];
+  for (let i = 0; i < MateRuleMethodsArr.length; i++) {
+    let current = MateRuleMethodsArr[i];
+    ret.push(
+      {
+        // id:'rule-'+i,
+        id: getGuid(),
+        content: usefulData.mateRuleMethods[current],
+      }
+    )
   }
   return ret;
 }
@@ -136,7 +159,7 @@ const getListStyle = () => ({
 
 
 //region 控件定义的主体
-export default class TemplateSequence extends Component {
+export default class MateRullMethods extends Component {
   //组件的数据
   state = {
     items: [],
@@ -147,7 +170,7 @@ export default class TemplateSequence extends Component {
   //构造函数
   constructor(props) {
     super(props);
-    let items = getItems3(this.props.temps);
+    let items = getItems3(this.props.methods);
     this.state = {
       items: items,
     };
@@ -156,7 +179,7 @@ export default class TemplateSequence extends Component {
   componentWillReceiveProps(nextProps: Readonly<P>, nextContext: any) {
     if (nextProps && nextProps.methods)
     {
-      let newItems = getItems3(nextProps.temps);
+      let newItems = getItems3(nextProps.methods);
       this.setState({items:newItems,
       });
     }
@@ -186,13 +209,13 @@ export default class TemplateSequence extends Component {
       result.source.index,
       result.destination.index
     );
-    this.setState({items:items},()=>
-    {
-      if (this.props.onTempsChanged)
-      {
-        this.props.onTempsChanged(convert2TempsIndexList(this.state.items));
-      }
-    });
+        this.setState({items:items},()=>
+        {
+          if (this.props.onMateRuleMethodsChanged)
+          {
+            this.props.onMateRuleMethodsChanged(convert2EnumIndexList(items));
+          }
+        });
   }
 
 
@@ -221,18 +244,17 @@ export default class TemplateSequence extends Component {
     if (data.length < 1) {
       notification.warn({
         message: '提示:',
-        description: '您至少需要添加一个该偏好设置所使用的物流,否则该地区的快递可能无法进行物流匹配.',
+        description: '您至少需要添加一个该偏好设置的物流匹配方式,否则将按照无特殊规则的区域进行物流匹配',
       })
     }
-    this.setState({items: data, showAddBtn: true}
-    ,()=>
+    this.setState({items: data, showAddBtn: true},
+      ()=>
       {
-        if (this.props.onTempsChanged)
+        if (this.props.onMateRuleMethodsChanged)
         {
-          this.props.onTempsChanged(convert2TempsIndexList(this.state.items));
+          this.props.onMateRuleMethodsChanged(convert2EnumIndexList(data));
         }
-      }
-    );
+      });
   }
 
   //endregion
@@ -240,28 +262,54 @@ export default class TemplateSequence extends Component {
 
   //region 当用户点了添加按钮
   async onClickAddBtn() {
-
-    let canSelectItems= [];
-    //region 已经在展示中的就不在备选目标里面了
-    for (var p in usefulData.useAbleTempsIndexList)
-    {
-      let oldItem = this.state.items.find((item)=>{return item.templateIndex === usefulData.useAbleTempsIndexList[p]});
-      if(!oldItem)
-      {
-        canSelectItems.push(usefulData.useAbleTempsIndexList[p])
+    //region 已经在使用的就不让选了.
+    let canSelectItems = [];
+    for (let i = 1; i < usefulData.mateRuleMethods.length; i++) {
+      let havenItem = this.state.items.find((item) => {
+        return item.content === usefulData.mateRuleMethods[i];
+      })
+      if (havenItem) {
+        continue;
       }
+      canSelectItems.push(usefulData.mateRuleMethods[i]);
     }
+
+    // console.log('已经有的:', this.state.items);
     //endregion
 
-    if (canSelectItems.length === 0)
-    {
+    //region 如果没有可以选的,退出,通常不会这样的,因为列表中如果已经包含了所有已经选择的,添加按钮就不显示了.
+    if (!canSelectItems || canSelectItems.length === 0) {
+      return;
+    }
+    //endregion
+    //region 如果只有一项的话,直接添加这一项进来就可以了.
+
+    if (canSelectItems.length === 1) {
+      let data = this.state.items;
+      data.push(
+        {
+          // id:'item-'+data.length,
+          id: getGuid(),
+          content: canSelectItems[0],
+        }
+      )
+      this.setState({items: data, showAddBtn: false},
+        ()=>
+        {
+          if (this.props.onMateRuleMethodsChanged)
+          {
+            this.props.onMateRuleMethodsChanged(convert2EnumIndexList(data));
+          }
+        });
       return;
     }
 
-    //可以被选择的模板
+    //endregion
+
+
     //region 使用sweetalert2进行展示选择
     const {value: selectedIndex} = await Swal2.fire({
-      title: '选择要使用的物流模板',
+      title: '请选择要添加的物流匹配规则',
       input: 'select',
       confirmButtonColor: '#7cd1f9',
       confirmButtonText:
@@ -290,27 +338,18 @@ export default class TemplateSequence extends Component {
           {
             // id:'item-'+newData.length,
             id: getGuid(),
-            templateIndex:selectedItem,
-            templateName: selectedItem,
+            content: canSelectItems[selectedIndex],
           }
         )
-        this.setState({items:newData},
-          ()=>
+        this.setState({items:newData},()=>
+        {
+          if (this.props.onMateRuleMethodsChanged)
           {
-            //region 通知外部,模板有修改
-            if (this.props.onTempsChanged)
-            {
-              this.props.onTempsChanged(convert2TempsIndexList(newData));
-            }
-            //endregion
-          });
-
+            this.props.onMateRuleMethodsChanged(convert2EnumIndexList(newData));
+          }
+        })
       }
     }
-    // if (selectedIndex>=0) {
-    //     // Swal2.fire(`You selected: ${fruit}`)
-    //     Swal2.fire(`You selected: ${canSelectItems[selectedIndex]}`)
-    // }
     //endregion
   }
 
@@ -342,13 +381,13 @@ export default class TemplateSequence extends Component {
                 ref={provided.innerRef}
                 style={getListStyle(snapshot)}
                 onMouseEnter={() => {
-                  this.setState({showAddBtn: this.state.items.length < usefulData.useAbleTempsIndexList.length})
+                  this.setState({showAddBtn: this.state.items.length < 4})
                 }}
                 onMouseLeave={() => {
                   this.setState({showAddBtn: false})
                 }}
               >
-                <div className={styles.titleStyle}>模板使用顺序,拖拽排序,点击编辑</div>
+                <div className={styles.titleStyle}>规则使用顺序,拖拽排序,点击编辑</div>
                 {this.state.items.map((item, index) => (
                   <Draggable key={item.id} draggableId={item.id} index={index}>
                     {(provided, snapshot) => (
@@ -365,7 +404,7 @@ export default class TemplateSequence extends Component {
                           this.onSelected(item)
                         }}
                       >
-                        {item.templateName}
+                        {item.content}
                         {<div hidden={!(this.state.selectedItemId === item.id)} className={styles.deleteBtn}
                               onClick={() => {
                                 this.onClickRemoveBtn(index)

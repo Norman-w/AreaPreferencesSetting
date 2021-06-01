@@ -250,7 +250,7 @@ class AreaPreferencesManage extends React.Component
         };
     constructor(props) {
         super(props);
-        this.provincesInfo = this.buildProvinceInfoObj();
+
     }
     componentDidMount() {
         // this.buildChinaAreasInfo();
@@ -351,40 +351,7 @@ class AreaPreferencesManage extends React.Component
     }
     //endregion
 
-  //region 获取该城市/地区 在省份中的占比
-  //region 获取该省份一共有多少个area
-  buildProvinceInfoObj()
-  {
-    let info = {
 
-    };
-    for (let i=0;i<areaInfo.length;i++)
-    {
-      let proInfo = {};
-      let pro = areaInfo[i];
-      if (!pro.cities || pro.cities.length<1)
-      {
-        continue;
-      }
-      proInfo.cityCount=pro.cities.length;
-      proInfo.areaCount = 0;
-      proInfo.name = pro.Name;
-      if (pro.cities && pro.cities.length>0)
-      {
-        for (let j=0;j<pro.cities.length;j++)
-        {
-          if (pro.cities[j].areas) {
-            proInfo.areaCount += pro.cities[j].areas.length;
-          }
-        }
-      }
-      info[''+pro.Id] = proInfo;
-    }
-    // console.log('制作完成', info);
-    return info;
-  }
-  //endregion
-  //endregion
     render() {
         let preferencesDOM = [];
         for (let i=0;i<this.state.preferences.length;i++)
@@ -393,7 +360,7 @@ class AreaPreferencesManage extends React.Component
             let preference = this.state.preferences[i];
 
             preferencesDOM.push(
-                <Preference preference={preference} provincesInfo={this.provincesInfo} key={i}/>
+                <Preference preference={preference} key={i}/>
             )
           //endregion
         }

@@ -1661,6 +1661,11 @@
   dependencies:
     "@sweetalert/transformer" "^0.1.1"
 
+"@sweetalert2/themes@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.nlark.com/@sweetalert2/themes/download/@sweetalert2/themes-5.0.0.tgz#45d81bb5c56fd8b6ce2b4a0df2a07e0dff38a7bd"
+  integrity sha1-RdgbtcVv2LbOK0oN8qB+Df84p70=
+
 "@testing-library/dom@^7.28.1":
   version "7.31.0"
   resolved "https://registry.nlark.com/@testing-library/dom/download/@testing-library/dom-7.31.0.tgz#938451abd3ca27e1b69bb395d4a40759fd7f5b3b"
@@ -11017,10 +11022,15 @@ svgo@^1.0.0, svgo@^1.2.2:
     unquote "~1.1.1"
     util.promisify "~1.0.0"
 
-sweetalert2@^11.0.15:
-  version "11.0.15"
-  resolved "https://registry.nlark.com/sweetalert2/download/sweetalert2-11.0.15.tgz#61998be3e74adfd4a89c3027897c1b9e170fb3b9"
-  integrity sha1-YZmL4+dK39SonDAniXwbnhcPs7k=
+sweetalert2-react-content@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.nlark.com/sweetalert2-react-content/download/sweetalert2-react-content-4.0.1.tgz#fdbbc0010095ec9aaccb5549a8f9f57500aa477e"
+  integrity sha1-/bvAAQCV7Jqsy1VJqPn1dQCqR34=
+
+sweetalert2@^11.0.16:
+  version "11.0.16"
+  resolved "https://registry.nlark.com/sweetalert2/download/sweetalert2-11.0.16.tgz#48b3b0420cb2431b906f627d54884f5c7a88d434"
+  integrity sha1-SLOwQgyyQxuQb2J9VIhPXHqI1DQ=
 
 sweetalert@^2.1.2:
   version "2.1.2"
