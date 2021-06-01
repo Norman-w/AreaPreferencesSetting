@@ -1,9 +1,9 @@
 import React, {Component} from "react";
-import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
-import styles from './MateRullMethods.module.css';
+import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
+import styles from './MateRuleMethods.module.css';
 import '../../global.css'
 import Swal2 from 'sweetalert2';
-import {notification, Spin} from 'antd';
+import {notification} from 'antd';
 import usefulData from "./usefulData";
 // import '@sweetalert2/themes/bulma/bulma.css';
 
@@ -35,7 +35,7 @@ const convert2EnumIndexList = (showingItems)=>
     return null;
   }
   let ret = [];
-  for (var p in showingItems)
+  for (let p in showingItems)
   {
     let content = showingItems[p].content;
     let index = usefulData.mateRuleMethods.indexOf(content);
@@ -46,25 +46,7 @@ const convert2EnumIndexList = (showingItems)=>
 //endregion
 
 //region 初始化数据
-const getItems = count =>
-  Array.from({length: count}, (v, k) => k).map(k => ({
-    // id: `item-${k + 1}`,
-    id: getGuid(),
-    content: `this is content ${k + 1}`
-  }));
-const getItems2 = () => {
-  let ret = [];
-  for (let i = 1; i < usefulData.mateRuleMethods.length; i++) {
-    ret.push(
-      {
-        // id:'item-'+i,
-        id: getGuid(),
-        content: usefulData.mateRuleMethods[i],
-      }
-    )
-  }
-  return ret;
-}
+
 const getItems3 = (MateRuleMethodsArr) => {
 //     "MateRuleMethod": [
 //     2,
@@ -121,7 +103,7 @@ const getItemStyle = (that, item, isDragging, draggableStyle) => {
   let draggingInfo = {
     background: isDragging ? "#ccd795" : "#edf6f3",
   }
-  let selectedInfo = null;
+  let selectedInfo;
   if (isSelected) {
     selectedInfo = {
       border: '1px dashed #888666',
@@ -137,13 +119,12 @@ const getItemStyle = (that, item, isDragging, draggableStyle) => {
   // let sss = styles.selected;
   // console.log(sss);
 
-  let ret = {
+  return {
     ...normal,
     ...draggingInfo,
     ...selectedInfo,
     // 拖拽的时候背景变化
-  }
-  return ret;
+  };
 };
 //endregion
 
@@ -159,7 +140,7 @@ const getListStyle = () => ({
 
 
 //region 控件定义的主体
-export default class MateRullMethods extends Component {
+export default class MateRuleMethods extends Component {
   //组件的数据
   state = {
     items: [],
@@ -194,16 +175,7 @@ export default class MateRullMethods extends Component {
     if (!result.destination || result.destination.index === result.source.index) {
       return;
     }
-    // console.log(result);
 
-    //region 找出之前被选中的那个的id
-    let oldSelectedItem = null;
-    if (this.state.selectedItemId) {
-      oldSelectedItem = this.state.items.find((item) => {
-        return item.id === this.state.selectedItemId
-      })
-    }
-    //endregion
     const items = reorder(
       this.state.items,
       result.source.index,

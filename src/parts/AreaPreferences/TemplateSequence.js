@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
-import styles from './MateRullMethods.module.css';
+import styles from './MateRuleMethods.module.css';
 import '../../global.css'
 import Swal2 from 'sweetalert2';
 import {notification, Spin} from 'antd';
