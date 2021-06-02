@@ -44,6 +44,7 @@ export default class TagsManager extends Component {
       }
       let tag = this.state.items[index];
       let newData = this.state.items;
+      let that = this;
       swal({
           title: tag,
           text: "将要删除关键字["+tag+"]吗?",
@@ -60,11 +61,21 @@ export default class TagsManager extends Component {
               if (willDelete) {
                   newData.splice(index,1);
                   console.log('新的数据集合是:',newData, '要删除的index:', index);
-                  this.setState({items:newData});
-                  swal("该关键字已删除", {
+                  this.setState({items:newData},
+                    ()=>
+                  {
+                    swal("该关键字已删除", {
                       icon: "success",
-                  });
-                  let timout = setTimeout(()=>{swal.close();clearTimeout(timout)}, 2000)
+                    });
+                    let timout = setTimeout(()=>{swal.close();clearTimeout(timout)}, 2000);
+                    //region  通知外部已经修改
+                    if(that.onTagsChanged)
+                    {
+                      that.onTagsChanged(newData);
+                    }
+                    //endregion
+                  }
+                  );
               } else {
                   // swal("Your imaginary file is safe!");
               }
@@ -72,6 +83,7 @@ export default class TagsManager extends Component {
   }
     onclickAddBtn()
     {
+      let that = this;
         swal({
             text: '添加关键字...',
             content: "input",
@@ -90,11 +102,21 @@ export default class TagsManager extends Component {
                 }
                 let items = this.state.items;
                 items.push(tag);
-                this.setState({items:items})
-                swal("已添加", {
-                    icon: "success",
-                });
-                let timout = setTimeout(()=>{swal.close();clearTimeout(timout)}, 2000)
+                this.setState({items:items},
+                  ()=>
+                  {
+                    swal("已添加", {
+                      icon: "success",
+                    });
+                    let timout = setTimeout(()=>{swal.close();clearTimeout(timout)}, 2000)
+                    //region  通知外部已经修改
+                    if(that.onTagsChanged)
+                    {
+                      that.onTagsChanged(items);
+                    }
+                    //endregion
+                  }
+                )
             })
     }
 

@@ -42,6 +42,7 @@ class Preference extends React.Component
     }
     //endregion
 
+  //region 下面的子空间的内容发生变更
   //region 当该偏好的地区被更改了选择
   onChangeSelectedAreas(areasIdList)
   {
@@ -68,6 +69,28 @@ class Preference extends React.Component
     console.log('Preference接收到模板修改,参数是:', tempsIndexList)
   }
   //endregion
+
+  //region 如买家或卖家没有备注指定的快递,且地址中包含如下关键字时,不匹配
+  onSkipTagsChanged(tags)
+  {
+    this.state.preference.SkipTags = tags;
+  }
+  //endregion
+
+  //region 卖家备注或买家留言包含如下关键字时,强制不匹配
+  onMemoSkipTagsChanged(tags)
+  {
+    this.state.preference.MemoSkipTags = tags;
+  }
+  //endregion
+
+  //region 卖家备注或买家留言包含如下关键字时,强制使用优先模板顺序匹配
+  onUseAutoTempTagsChanged(tags)
+  {
+    this.state.preference.UseAutoTempTags = tags;
+  }
+  //endregion
+  //endregion
     //region 渲染函数
     render() {
 
@@ -89,9 +112,18 @@ class Preference extends React.Component
             <TemplateSequence temps={this.state.preference.TemplateSequence}
                               onTempsChanged={this.onTempsChanged.bind(this)}
             />
-            <TagsManager title={'如买家或卖家没有备注指定的快递,且地址中包含如下关键字时,不匹配'} items={this.props.preference.SkipTags}/>
-            <TagsManager title={'卖家备注或买家留言包含如下关键字时,强制不匹配'} items={this.props.preference.MemoSkipTags}/>
-            <TagsManager title={'卖家备注或买家留言包含如下关键字时,强制使用优先模板顺序匹配'} items={this.props.preference.UseAutoTempTags}/>
+            <TagsManager title={'如买家或卖家没有备注指定的快递,且地址中包含如下关键字时,不匹配'}
+                         items={this.props.preference.SkipTags}
+                         onTagsChanged={this.onSkipTagsChanged.bind(this)}
+            />
+            <TagsManager title={'卖家备注或买家留言包含如下关键字时,强制不匹配'}
+                         items={this.props.preference.MemoSkipTags}
+                         onTagsChanged={this.onMemoSkipTagsChanged.bind(this)}
+            />
+            <TagsManager title={'卖家备注或买家留言包含如下关键字时,强制使用优先模板顺序匹配'}
+                         items={this.props.preference.UseAutoTempTags}
+                         onTagsChanged={this.onUseAutoTempTagsChanged.bind(this)}
+            />
 
           </div>
         return DOM;

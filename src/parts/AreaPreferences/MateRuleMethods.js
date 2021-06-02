@@ -4,7 +4,7 @@ import styles from './MateRuleMethods.module.css';
 import '../../global.css'
 import Swal2 from 'sweetalert2';
 import {notification} from 'antd';
-import usefulData from "./usefulData";
+import pub from "./pub";
 // import '@sweetalert2/themes/bulma/bulma.css';
 
 //region 全局数据
@@ -38,7 +38,7 @@ const convert2EnumIndexList = (showingItems)=>
   for (let p in showingItems)
   {
     let content = showingItems[p].content;
-    let index = usefulData.mateRuleMethods.indexOf(content);
+    let index = pub.mateRuleMethods.indexOf(content);
     ret.push(index);
   }
   return ret;
@@ -62,7 +62,7 @@ const getItems3 = (MateRuleMethodsArr) => {
       {
         // id:'rule-'+i,
         id: getGuid(),
-        content: usefulData.mateRuleMethods[current],
+        content: pub.mateRuleMethods[current],
       }
     )
   }
@@ -151,7 +151,7 @@ export default class MateRuleMethods extends Component {
   //构造函数
   constructor(props) {
     super(props);
-    let items = getItems3(this.props.methods);
+    let items = getItems3(this.props.methods?this.props.methods:[]);
     this.state = {
       items: items,
     };
@@ -236,14 +236,14 @@ export default class MateRuleMethods extends Component {
   async onClickAddBtn() {
     //region 已经在使用的就不让选了.
     let canSelectItems = [];
-    for (let i = 1; i < usefulData.mateRuleMethods.length; i++) {
+    for (let i = 1; i < pub.mateRuleMethods.length; i++) {
       let havenItem = this.state.items.find((item) => {
-        return item.content === usefulData.mateRuleMethods[i];
+        return item.content === pub.mateRuleMethods[i];
       })
       if (havenItem) {
         continue;
       }
-      canSelectItems.push(usefulData.mateRuleMethods[i]);
+      canSelectItems.push(pub.mateRuleMethods[i]);
     }
 
     // console.log('已经有的:', this.state.items);
@@ -353,14 +353,19 @@ export default class MateRuleMethods extends Component {
                 ref={provided.innerRef}
                 style={getListStyle(snapshot)}
                 onMouseEnter={() => {
-                  this.setState({showAddBtn: this.state.items.length < 4})
+                  let show = true;
+                  if (this.state.items)
+                  {
+                    show = this.state.items.length < pub.mateRuleMethods.length-1;
+                  }
+                  this.setState({showAddBtn: show})
                 }}
                 onMouseLeave={() => {
                   this.setState({showAddBtn: false})
                 }}
               >
                 <div className={styles.titleStyle}>规则使用顺序,拖拽排序,点击编辑</div>
-                {this.state.items.map((item, index) => (
+                {this.state.items && this.state.items.map((item, index) => (
                   <Draggable key={item.id} draggableId={item.id} index={index}>
                     {(provided, snapshot) => (
                       <div

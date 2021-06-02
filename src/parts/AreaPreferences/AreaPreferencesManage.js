@@ -5,248 +5,16 @@ import styles from './AreaPreferencesManage.module.css';
 import chinaGeoJson from "./100000_full";
 import Preference from "./Preference";
 import areas from "../../areas";
-import areaInfo from "./areaInfo";
+import {Button} from "antd";
+import {
+    SaveTwoTone, FileAddOutlined,
+} from '@ant-design/icons';
 
 class AreaPreferencesManage extends React.Component
 {
-    //mateRuleMethods:{ NONE = 0, 买家留言 = 1, 卖家备注 = 2, 使用优选模板匹配 = 3, 地址过滤关键字 = 4 }
-    mateRuleMethods = ['NONE','买家留言','卖家备注','使用优先模板匹配,','地址过滤关键字',];
-    provincesInfo={
-      '110000':{
-        name:'北京',
-        cityCount:10,
-        areaCount:100,
-      }
-    };
     state=
         {
-            preferences: [
-                {
-                    "PreferenceAreasName": "北京 天津 河北省 ",
-                    "PreferenceAreasID": [
-                        110000,
-                        120000,
-                        130300,
-                      130400,
-                      130500,
-                      130600,
-                      130700,
-                      // 130800,
-                      // 130900,
-                      // 131000,
-                    ],
-                    "MateRuleMethod": [
-                        2,
-                        1,
-                        3
-                    ],
-                    "TemplateSequence": [
-                        "EMS.QPERP.EMS京津冀",
-                        "ZTO.QPERP.中通传统",
-                        "YTO.QPERP.圆通传统",
-                        "STO.QPERP申通传统",
-                        "ZTO.TB.中通电子面单",
-                        "YTO.TB.圆通电子面单",
-                        "STO.PDD.快递一联单",
-                        "YTO.PDD.标准面单"
-                    ],
-                    "SkipTags": [
-                        "村",
-                        "乡",
-                        "镇"
-                    ],
-                    "UseAutoTempTags": [
-                        "快递均可到",
-                        "快递均可",
-                        "未联系",
-                        "未确认"
-                    ],
-                    "MemoSkipTags": [
-                        "退款",
-                        "到货发",
-                        "不要"
-                    ]
-                },
-                {
-                    "PreferenceAreasName": "辽宁省 吉林省 黑龙江省 ",
-                    "PreferenceAreasID": [
-                        210000,
-                        220000,
-                        230000
-                    ],
-                    "MateRuleMethod": [
-                        2,
-                        1,
-                        3,
-                        4
-                    ],
-                    "TemplateSequence": [
-                        "申通传统",
-                        "中通传统",
-                        "圆通传统",
-                        "申通电子面单",
-                        "中通电子面单",
-                        "圆通电子面单"
-                    ],
-                    "SkipTags": [
-                        "村",
-                        "乡",
-                        "镇"
-                    ],
-                    "UseAutoTempTags": [
-                        "快递均可",
-                        "未联系",
-                        "未确认"
-                    ],
-                    "MemoSkipTags": [
-                        "退款",
-                        "到货发",
-                        "不要"
-                    ]
-                },
-                {
-                    "PreferenceAreasName": "上海 江苏省 浙江省 安徽省 ",
-                    "PreferenceAreasID": [
-                        310000,
-                        320000,
-                        330000,
-                        340000
-                    ],
-                    "MateRuleMethod": [
-                        2,
-                        1,
-                        3,
-                        4
-                    ],
-                    "TemplateSequence": [
-                        "圆通传统",
-                        "中通传统",
-                        "申通传统",
-                        "圆通电子面单",
-                        "中通电子面单",
-                        "申通电子面单"
-                    ],
-                    "SkipTags": [],
-                    "UseAutoTempTags": [
-                        "快递均可",
-                        "未联系",
-                        "未确认"
-                    ],
-                    "MemoSkipTags": [
-                        "退款",
-                        "到货发",
-                        "快递择优",
-                        "不要"
-                    ]
-                },
-                {
-                    "PreferenceAreasName": "西藏自治区 新疆维吾尔自治区 ",
-                    "PreferenceAreasID": [
-                        540000,
-                        650000
-                    ],
-                    "MateRuleMethod": [
-                        3,
-                        2,
-                        1
-                    ],
-                    "TemplateSequence": [
-                        "EMS传统江浙沪"
-                    ],
-                    "SkipTags": [],
-                    "UseAutoTempTags": [],
-                    "MemoSkipTags": [
-                        "退款",
-                        "到货发"
-                    ]
-                },
-                {
-                    "PreferenceAreasName": "福建省 江西省 山东省 河南省 湖北省 湖南省 贵州省 云南省 甘肃省 青海省 宁夏回族自治区 ",
-                    "PreferenceAreasID": [
-                        140000,
-                        350000,
-                        360000,
-                        370000,
-                        410000,
-                        420000,
-                        430000,
-                        520000,
-                        530000,
-                        620000,
-                        630000,
-                        640000
-                    ],
-                    "MateRuleMethod": [
-                        2,
-                        1,
-                        3
-                    ],
-                    "TemplateSequence": [
-                        "圆通传统",
-                        "申通传统",
-                        "中通传统",
-                        "圆通电子面单",
-                        "申通电子面单",
-                        "中通电子面单"
-                    ],
-                    "SkipTags": [
-                        "村",
-                        "乡",
-                        "镇"
-                    ],
-                    "UseAutoTempTags": [
-                        "快递均可到",
-                        "快递均可",
-                        "未联系",
-                        "未确认"
-                    ],
-                    "MemoSkipTags": [
-                        "退款",
-                        "到货发",
-                        "不要"
-                    ]
-                },
-                {
-                    "PreferenceAreasName": "内蒙古自治区 广东省 广西壮族自治区 海南省 重庆 四川省 陕西省 ",
-                    "PreferenceAreasID": [
-                        150000,
-                        440000,
-                        450000,
-                        460000,
-                        500000,
-                        510000,
-                        610000
-                    ],
-                    "MateRuleMethod": [
-                        2,
-                        1,
-                        3
-                    ],
-                    "TemplateSequence": [
-                        "申通传统",
-                        "圆通传统",
-                        "中通传统",
-                        "申通电子面单",
-                        "圆通电子面单",
-                        "中通电子面单"
-                    ],
-                    "SkipTags": [
-                        "村",
-                        "乡",
-                        "镇"
-                    ],
-                    "UseAutoTempTags": [
-                        "快递均可",
-                        "未联系",
-                        "未确认"
-                    ],
-                    "MemoSkipTags": [
-                        "退款",
-                        "到货发",
-                        "不要"
-                    ]
-                }
-            ]
+            preferences: pub.testData.preferences
         };
     constructor(props) {
         super(props);
@@ -352,6 +120,28 @@ class AreaPreferencesManage extends React.Component
     //endregion
 
 
+  //region 当偏好发生了变化
+  onPreferenceChanged(index)
+  {
+
+  }
+  //endregion
+
+  //region 点击添加偏好
+  onClickAddPreferenceBtn()
+  {
+    let data = this.state.preferences;
+    data.push({});
+    this.setState({preferences:data});
+  }
+  //endregion
+
+  //region 点击保存
+  onClickSavePreferencesBtn()
+  {
+    console.log(this.state.preferences[0]);
+  }
+  //endregion
     render() {
         let preferencesDOM = [];
         for (let i=0;i<this.state.preferences.length;i++)
@@ -360,13 +150,23 @@ class AreaPreferencesManage extends React.Component
             let preference = this.state.preferences[i];
 
             preferencesDOM.push(
-                <Preference preference={preference} key={i}/>
+                <Preference preference={preference} key={i} onChanged={()=>{this.onPreferenceChanged.bind(this)(i)}}/>
             )
           //endregion
         }
-        let DOM = <div className={styles.areaPreferencesManage}>
+        let DOM = <center><div className={styles.areaPreferencesManage}>
             {preferencesDOM}
-        </div>
+            <div className={styles.btnLine}>
+              <Button icon={<FileAddOutlined/>}
+                      onClick={this.onClickAddPreferenceBtn.bind(this)}
+              >新的偏好</Button>
+              <Button type={'primary'}
+                      icon={<SaveTwoTone twoToneColor="#cccccc" />}
+                      style={{marginLeft:30}}
+                      onClick={this.onClickSavePreferencesBtn.bind(this)}
+              >保存</Button>
+            </div>
+        </div></center>
         return DOM;
     }
 }

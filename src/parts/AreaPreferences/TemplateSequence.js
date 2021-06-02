@@ -4,7 +4,7 @@ import styles from './MateRuleMethods.module.css';
 import '../../global.css'
 import Swal2 from 'sweetalert2';
 import {notification, Spin} from 'antd';
-import usefulData from "./usefulData";
+import pub from "./pub";
 // import '@sweetalert2/themes/bulma/bulma.css';
 
 //region 全局数据
@@ -243,12 +243,12 @@ export default class TemplateSequence extends Component {
 
     let canSelectItems= [];
     //region 已经在展示中的就不在备选目标里面了
-    for (var p in usefulData.useAbleTempsIndexList)
+    for (var p in pub.useAbleTempsIndexList)
     {
-      let oldItem = this.state.items.find((item)=>{return item.templateIndex === usefulData.useAbleTempsIndexList[p]});
+      let oldItem = this.state.items.find((item)=>{return item.templateIndex === pub.useAbleTempsIndexList[p]});
       if(!oldItem)
       {
-        canSelectItems.push(usefulData.useAbleTempsIndexList[p])
+        canSelectItems.push(pub.useAbleTempsIndexList[p])
       }
     }
     //endregion
@@ -342,7 +342,7 @@ export default class TemplateSequence extends Component {
                 ref={provided.innerRef}
                 style={getListStyle(snapshot)}
                 onMouseEnter={() => {
-                  this.setState({showAddBtn: this.state.items.length < usefulData.useAbleTempsIndexList.length})
+                  this.setState({showAddBtn: this.state.items.length < pub.useAbleTempsIndexList.length})
                 }}
                 onMouseLeave={() => {
                   this.setState({showAddBtn: false})

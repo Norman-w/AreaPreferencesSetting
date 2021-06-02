@@ -1,12 +1,23 @@
 .areaPreferencesManage
 {
-    width: 92%;
+    width: 100%;
     /*height: 96%;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /*border: 1px solid darkseagreen;*/
-    margin: 1%;
+    border: 1px solid darkseagreen;
+    /*margin: 1%;*/
     padding: 1%;
+}
+.btnLine
+{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top:20px;
+  margin-bottom: 50px;
+  /*border: 1px solid red;*/
 }
