@@ -9,6 +9,8 @@ import {Button} from "antd";
 import {
     SaveTwoTone, FileAddOutlined,
 } from '@ant-design/icons';
+import pub from "./pub";
+import Swal2 from "sweetalert2";
 
 class AreaPreferencesManage extends React.Component
 {
@@ -139,7 +141,15 @@ class AreaPreferencesManage extends React.Component
   //region 点击保存
   onClickSavePreferencesBtn()
   {
-    console.log(this.state.preferences[0]);
+    // console.log(this.state.preferences[0]);
+      Swal2.fire({
+          title:'正在保存...',
+          didOpen(popup: HTMLElement) {
+              Swal2.showLoading();
+          },
+          // cancelButtonText:'取消',
+      })
+
   }
   //endregion
     render() {
